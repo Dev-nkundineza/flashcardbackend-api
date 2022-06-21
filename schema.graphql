@@ -2,6 +2,51 @@
 ### Do not make changes to this file directly
 
 
+type AllFlashcards {
+  count: Int!
+  flashcards: [Flashcard!]!
+  id: ID
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Flashcard {
+  answer: String!
+  id: Int!
+  isDone: Boolean!
+  postedBy: User
+  question: String!
+}
+
+input FlashcardOrderByInput {
+  answer: Sort
+  createdAt: Sort
+  question: Sort
+}
+
+type Mutation {
+  createFlashcard(answer: String!, question: String!): Flashcard!
+  deleteFlashcard(id: Int!): Flashcard!
+  login(email: String!, password: String!): AuthPayload!
+  signup(email: String!, name: String!, password: String!): AuthPayload!
+  updateFlashcard(answer: String, id: Int!, isDone: Boolean, question: String): Flashcard!
+}
+
 type Query {
-  ok: Boolean!
+  flashcards(filter: String, orderBy: [FlashcardOrderByInput!], skip: Int, take: Int): AllFlashcards!
+}
+
+enum Sort {
+  asc
+  desc
+}
+
+type User {
+  email: String!
+  flashcards: [Flashcard!]!
+  id: Int!
+  name: String!
 }

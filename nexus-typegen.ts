@@ -4,7 +4,7 @@
  */
 
 
-
+import type { Context } from "./src/context"
 
 
 
@@ -14,9 +14,15 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  FlashcardOrderByInput: { // input type
+    answer?: NexusGenEnums['Sort'] | null; // Sort
+    createdAt?: NexusGenEnums['Sort'] | null; // Sort
+    question?: NexusGenEnums['Sort'] | null; // Sort
+  }
 }
 
 export interface NexusGenEnums {
+  Sort: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -28,7 +34,28 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AllFlashcards: { // root type
+    count: number; // Int!
+    flashcards: NexusGenRootTypes['Flashcard'][]; // [Flashcard!]!
+    id?: string | null; // ID
+  }
+  AuthPayload: { // root type
+    token: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
+  Flashcard: { // root type
+    answer: string; // String!
+    id: number; // Int!
+    isDone: boolean; // Boolean!
+    question: string; // String!
+  }
+  Mutation: {};
   Query: {};
+  User: { // root type
+    email: string; // String!
+    id: number; // Int!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -39,21 +66,111 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  AllFlashcards: { // field return type
+    count: number; // Int!
+    flashcards: NexusGenRootTypes['Flashcard'][]; // [Flashcard!]!
+    id: string | null; // ID
+  }
+  AuthPayload: { // field return type
+    token: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
+  Flashcard: { // field return type
+    answer: string; // String!
+    id: number; // Int!
+    isDone: boolean; // Boolean!
+    postedBy: NexusGenRootTypes['User'] | null; // User
+    question: string; // String!
+  }
+  Mutation: { // field return type
+    createFlashcard: NexusGenRootTypes['Flashcard']; // Flashcard!
+    deleteFlashcard: NexusGenRootTypes['Flashcard']; // Flashcard!
+    login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
+    updateFlashcard: NexusGenRootTypes['Flashcard']; // Flashcard!
+  }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    flashcards: NexusGenRootTypes['AllFlashcards']; // AllFlashcards!
+  }
+  User: { // field return type
+    email: string; // String!
+    flashcards: NexusGenRootTypes['Flashcard'][]; // [Flashcard!]!
+    id: number; // Int!
+    name: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  AllFlashcards: { // field return type name
+    count: 'Int'
+    flashcards: 'Flashcard'
+    id: 'ID'
+  }
+  AuthPayload: { // field return type name
+    token: 'String'
+    user: 'User'
+  }
+  Flashcard: { // field return type name
+    answer: 'String'
+    id: 'Int'
+    isDone: 'Boolean'
+    postedBy: 'User'
+    question: 'String'
+  }
+  Mutation: { // field return type name
+    createFlashcard: 'Flashcard'
+    deleteFlashcard: 'Flashcard'
+    login: 'AuthPayload'
+    signup: 'AuthPayload'
+    updateFlashcard: 'Flashcard'
+  }
   Query: { // field return type name
-    ok: 'Boolean'
+    flashcards: 'AllFlashcards'
+  }
+  User: { // field return type name
+    email: 'String'
+    flashcards: 'Flashcard'
+    id: 'Int'
+    name: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    createFlashcard: { // args
+      answer: string; // String!
+      question: string; // String!
+    }
+    deleteFlashcard: { // args
+      id: number; // Int!
+    }
+    login: { // args
+      email: string; // String!
+      password: string; // String!
+    }
+    signup: { // args
+      email: string; // String!
+      name: string; // String!
+      password: string; // String!
+    }
+    updateFlashcard: { // args
+      answer?: string | null; // String
+      id: number; // Int!
+      isDone?: boolean | null; // Boolean
+      question?: string | null; // String
+    }
+  }
+  Query: {
+    flashcards: { // args
+      filter?: string | null; // String
+      orderBy?: NexusGenInputs['FlashcardOrderByInput'][] | null; // [FlashcardOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
@@ -64,9 +181,9 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
@@ -87,7 +204,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
